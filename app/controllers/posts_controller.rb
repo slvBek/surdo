@@ -8,6 +8,23 @@ class PostsController < ApplicationController
 
   # GET /posts/1 or /posts/1.json
   def show
+    @post = Post.find(params[:id])
+
+    unless viewed_post?(@post)
+      @post.increment_views
+      mark_post_as_viewed(@post)
+    end
+  end
+
+  
+
+  def viewed_post?(post)
+    session[:viewed_posts] ||= []
+    session[:viewed_posts].include?(post.id)
+  end
+
+  def mark_post_as_viewed(post)
+    session[:viewed_posts] << post.id
   end
 
   # GET /posts/new
