@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-  before_action :set_post, only: %i[ show edit update destroy ]
+  before_action :set_post, only: %i[ show edit update destroy like unlike ]
 
   # GET /posts or /posts.json
   def index
@@ -26,6 +26,57 @@ class PostsController < ApplicationController
   def mark_post_as_viewed(post)
     session[:viewed_posts] << post.id
   end
+
+  def like
+    unless liked_post?(@post)
+      @post.increment_likes
+      mark_post_as_liked(@post)
+      respond_to do |format|
+        format.html { redirect_to post_url(@post), notice: "You liked this post." }
+        format.json { render :show, status: :ok, location: @post }
+        format.js   # Добавляем поддержку JS
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to post_url(@post), alert: "You have already liked this post." }
+        format.json { render :show, status: :unprocessable_entity, location: @post }
+        format.js   # Добавляем поддержку JS
+      end
+    end
+  end
+
+  # DELETE /posts/1/unlike
+  def unlike
+    if liked_post?(@post)
+      @post.decrement_likes
+      unmark_post_as_liked(@post)
+      respond_to do |format|
+        format.html { redirect_to post_url(@post), notice: "You unliked this post." }
+        format.json { render :show, status: :ok, location: @post }
+        format.js   # Добавляем поддержку JS
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to post_url(@post), alert: "You haven't liked this post yet." }
+        format.json { render :show, status: :unprocessable_entity, location: @post }
+        format.js   # Добавляем поддержку JS
+      end
+    end
+  end
+
+  def liked_post?(post)
+    session[:liked_posts] ||= []
+    session[:liked_posts].include?(post.id)
+  end
+
+  def mark_post_as_liked(post)
+    session[:liked_posts] << post.id
+  end
+
+  def unmark_post_as_liked(post)
+    session[:liked_posts].delete(post.id)
+  end
+
 
   # GET /posts/new
   def new

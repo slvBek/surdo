@@ -1,8 +1,17 @@
-<div id="<%= dom_id post %>">
+<div id="<%= dom_id(post) %>">
   <h2><%= post.title %></h2>
-  <h6><%= pluralize(post.views, "views") %></h6>
+  <h6><%= pluralize(post.views, "view") %></h6>
   <div>
     <%= post.body %>
   </div>
-
+  <div>
+    <%= pluralize(post.likes, "like") %>
+  </div>
+  <div>
+    <% if session[:liked_posts].include?(post.id) %>
+      <%= button_to 'Unlike', unlike_post_path(post), method: :delete, remote: true %>
+    <% else %>
+      <%= button_to 'Like', like_post_path(post), method: :post, remote: true %>
+    <% end %>
+  </div>
 </div>
