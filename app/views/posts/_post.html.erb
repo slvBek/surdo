@@ -7,11 +7,15 @@
   <div>
     <%= pluralize(post.likes, "like") %>
   </div>
+  
   <div>
     <% if session[:liked_posts].include?(post.id) %>
       <%= button_to 'Unlike', unlike_post_path(post), method: :delete, remote: true %>
     <% else %>
       <%= button_to 'Like', like_post_path(post), method: :post, remote: true %>
     <% end %>
+  </div>
+  <div>
+    <p>Published at: <%= post.created_at.in_time_zone('Tashkent').strftime("%B %d, %Y %H:%M") %></p>
   </div>
 </div>
