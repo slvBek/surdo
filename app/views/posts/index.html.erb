@@ -3,14 +3,21 @@
 
   <h1>Posts</h1>
 
-  <div id="posts">
-    <% @posts.each do |post| %>
-      <%= render post %>
-      <p>
-        <%= link_to "Show this post", post %>
-      </p>
-    <% end %>
-  </div>
+  <% @posts.each do |post| %>
+    <div class="card" style="display: flex; margin-bottom: 20px; padding: 20px; border: 1px solid #ddd;">
+      <div class="card-body" style="flex: 1;">
+        <p><%= post.created_at.strftime("%d.%m.%Y, %H:%M") %></p>
+        <h2><%= post.title %></h2>
+        <p><%= pluralize(post.views, "view") %> · <%= pluralize(post.likes, "like") %></p>
+        <div>
+          <%= link_to 'Show this post', post %>
+        </div>
+      </div>
+      <div class="card-image" style="margin-left: 20px;">
+        <%= image_tag(post.image, style: "width: 150px; height: auto;") if post.image.attached? %>
+      </div>
+    </div>
+  <% end %>
 
-  <%= link_to "New post", new_post_path %>
+  <%= link_to 'New Post', new_post_path %>
 </div>
