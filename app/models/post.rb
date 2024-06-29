@@ -8,6 +8,7 @@ class Post < ApplicationRecord
     def decrement_likes
         self.decrement!(:likes)
     end
+    has_one_attached :image
     validates :title, presence: true, length: { minimum: 5, maximum: 50 } # ограничение введение символов для создания поста
     validates :title, presence: true, length: { minimum: 10, maximum: 1000 }
 end

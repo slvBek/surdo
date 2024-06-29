@@ -4,6 +4,11 @@
   <div>
     <%= post.body %>
   </div>
+  <% if post.image.attached? %>
+    <div>
+      <%= image_tag post.image %>
+    </div>
+  <% end %>
   <div>
     <%= pluralize(post.likes, "like") %>
   </div>
